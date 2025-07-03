@@ -81,3 +81,17 @@ article {
 .delete-btn:hover {
     background-color: var(--secondary-hover);
 }
+/* style.css の一番下に追加 */
+
+/* メモのヘッダー部分のスタイルを上書き */
+.memo-header {
+    /* 日付の色は元のままでも良いが、少し濃くするなら */
+    color: hsl(205, 10%, 40%); 
+}
+
+/* メモのヘッダー内の科目名（太字）の色を上書き */
+.memo-header strong {
+    /* var(--primary) はPico.cssのメインカラー（青色）を参照する便利な変数 */
+    color: var(--primary); 
+    font-weight: 600; /* 少し太くする */
+}
