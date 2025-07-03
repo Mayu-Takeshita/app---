@@ -30,6 +30,13 @@
                         </select>
                     </label>
                 </div>
+            　　 <!-- 普段はCSSで隠しておく、手動入力用のラッパー -->
+                <div id="custom-subject-wrapper" class="hidden">
+                    <label for="custom-subject-text">
+                        科目名を手動で入力
+                        <input type="text" id="custom-subject-text" placeholder="例：特別講義A">
+                    </label>
+                </div>
                 <label for="memo-text">メモ</label>
                 <textarea id="memo-text" rows="4" placeholder="授業のメモを入力..." required></textarea>
                 <button type="submit">登録する</button>

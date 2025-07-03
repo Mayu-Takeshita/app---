@@ -95,3 +95,9 @@ article {
     color: var(--primary); 
     font-weight: 600; /* 少し太くする */
 }
+/* style.css の一番下に追加 */
+
+/* 隠すための汎用クラス */
+.hidden {
+    display: none;
+}
