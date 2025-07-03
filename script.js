@@ -1,22 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // あなたの履修科目リスト
-    const mySubjects = [
-        "応用数学",
-        "情報工学実験Ⅲ",
-        "組込システムⅠ",
-        "計測システム",
-        "インターンシップ",
-        "幾何概論Ⅰ",
-        "画像処理",
-        "英語特殊講義A",
-        "ソフトウェア工学",
-        "シュミレーション工学",
-        "情報理論",
-        "応用統計",
-        "その他"
-    ];
+    // ★★★★★ ここから変更 ★★★★★
+    // 曜日の表示順を定義する配列
+    const dayOrder = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "その他"];
 
+    // 曜日ごとの科目リスト（オブジェクト形式）
+    const subjectsByDay = {
+        "月曜日": [
+            "応用数学",
+            "情報工学実験Ⅲ"
+        ],
+        "火曜日": [
+            "組込システムⅠ",
+            "計測システム",
+            "インターンシップ",
+            "幾何概論Ⅰ"
+        ],
+        "水曜日": [
+            // 水曜日の授業がなければ空のまま
+        ],
+        "木曜日": [
+            "画像処理",
+            "英語特殊講義A",
+            "ソフトウェア工学"
+        ],
+        "金曜日": [
+            "シュミレーション工学",
+            "情報理論",
+            "応用統計"
+        ],
+        "土曜日": [
+            // 土曜日の授業がなければ空のまま
+        ],
+        
+    };
+    // ★★★★★ ここまで変更 ★★★★★
     // 1. 必要なHTML要素をIDで取得
     const memoForm = document.getElementById('memo-form');
     const subjectSelect = document.getElementById('subject-select');
@@ -26,9 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. 処理で使う関数を定義
 
+        // script.js の populateSubjectDropdown 関数
 
+    /** 科目リストのプルダウンを曜日グループ付きで生成する関数 */
     const populateSubjectDropdown = () => {
-        // ★★★★★ ここから変更 ★★★★★
         // 最初に「選択してください」という項目を追加
         const defaultOption = document.createElement('option');
         defaultOption.value = "";
@@ -36,16 +55,32 @@ document.addEventListener('DOMContentLoaded', () => {
         defaultOption.disabled = true;
         defaultOption.selected = true;
         subjectSelect.appendChild(defaultOption);
-        
-        // その後に、mySubjectsのリストを追加していく
-        mySubjects.forEach(subject => {
-            const option = document.createElement('option');
-            option.value = subject;
-            option.textContent = subject;
-            subjectSelect.appendChild(option);
+
+        // dayOrderの順番で曜日をループ
+        dayOrder.forEach(day => {
+            const subjects = subjectsByDay[day]; // その曜日の科目リストを取得
+
+            // その曜日に科目が1つ以上存在する場合のみ、グループ（<optgroup>）を作成
+            if (subjects && subjects.length > 0) {
+                // <optgroup>要素（曜日の見出し）を作成
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = `--- ${day} ---`; // ラベルに曜日名を設定
+
+                // 科目リストをループして<option>要素を作成
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    option.textContent = subject;
+                    // optionをoptgroupに追加
+                    optgroup.appendChild(option);
+                });
+
+                // 完成したoptgroupをselect要素に追加
+                subjectSelect.appendChild(optgroup);
+            }
         });
-        // ★★★★★ ここまで変更 ★★★★★
     };
+    
 
     /** LocalStorageからメモの配列を取得する関数 */
     const loadMemos = () => {
