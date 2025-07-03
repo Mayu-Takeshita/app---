@@ -4,67 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>授業メモ整理アプリ</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#007bff"/>
-    <!-- CSSファイルを読み込むためのリンク -->
+
+    <!-- Pico.css のリンク -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    
+    <!-- 自分のカスタムCSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <h1>授業メモ整理アプリ</h1>
-    </header>
+    <main class="container">
+        <header>
+            <h1>授業メモ整理アプリ</h1>
+        </header>
 
-    <main>
         <!-- メモ入力フォーム -->
-        <div class="input-container">
-            <h2>新しいメモを登録</h2>
-            <!-- formタグにはid="memo-form"を付ける -->
+        <article>
+            <h2 id="new-memo-header">新しいメモを登録</h2>
             <form id="memo-form">
-                <div class="form-group">
-                    <label for="subject-select">科目:</label>
-                    <!-- selectタグにはid="subject-select"を付ける -->
-                    <select id="subject-select" required>
-                        <option value="">科目を選択してください</option>
-                        <option value="データ構造とアルゴリズム">データ構造とアルゴリズム</option>
-                        <option value="情報科学">情報科学</option>
-                        <option value="経済学">経済学</option>
-                        <option value="語学">語学</option>
-                        <option value="その他">その他</option>
-                    </select>
+                <div class="grid">
+                    <label for="subject-select">
+                        科目
+                        <select id="subject-select" required>
+                            <option value="" disabled selected>科目を選択してください</option>
+                            <!-- JavaScriptがここに科目を追加します -->
+                        </select>
+                    </label>
                 </div>
-                <div class="form-group">
-                    <label for="memo-text">メモ:</label>
-                    <!-- textareaタグにはid="memo-text"を付ける -->
-                    <textarea id="memo-text" rows="4" placeholder="授業のメモを入力..." required></textarea>
-                </div>
+                <label for="memo-text">メモ</label>
+                <textarea id="memo-text" rows="4" placeholder="授業のメモを入力..." required></textarea>
                 <button type="submit">登録する</button>
             </form>
-        </div>
+        </article>
 
         <!-- メモ表示エリア -->
-        <div class="list-container">
+        <article>
             <h2>メモ一覧</h2>
-            <!-- ulタグにはid="memo-list"を付ける -->
-            <ul id="memo-list">
-                <!-- ここにJavaScriptでメモが追加されます -->
-            </ul>
-        </div>
+
+            <!-- 検索ボックス -->
+            <input type="search" id="search-box" placeholder="キーワードでメモを検索...">
+            
+            <!-- メモリスト本体 -->
+            <div id="memo-list-container">
+                <!-- JavaScriptがここに科目ごとのリストを追加します -->
+            </div>
+        </article>
     </main>
-    <!-- ★★★ ここから追記 (script.jsの読み込みの上) ★★★ -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./service-worker.js').then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
-    <!-- ★★★ ここまで追記 ★★★ -->
-    <!-- JavaScriptファイルを読み込むためのリンク (bodyの最後に書く) -->
+
     <script src="script.js"></script>
 </body>
 </html>
