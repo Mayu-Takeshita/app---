@@ -85,9 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         sortedSubjects.forEach(subject => {
+           const memoCount = groupedMemos[subject].length;
+
             const subjectHeader = document.createElement('h3');
             subjectHeader.className = 'subject-group-header';
-            subjectHeader.textContent = subject;
+            subjectHeader.textContent = `${subject} (${memoCount}件)`; // ←科目名と件数を表示
             memoListContainer.appendChild(subjectHeader);
             const subjectMemoList = document.createElement('ul');
             subjectMemoList.className = 'subject-memo-list';
