@@ -1,0 +1,144 @@
+/* 全体の設定 */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* メインのコンテナ */
+main {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+/* 入力フォーム */
+.input-container {
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* paddingを含めて幅100%にする */
+    font-size: 16px;
+}
+
+/* ボタン */
+button {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* メモ一覧 */
+#memo-list {
+    list-style: none;
+    padding: 0;
+}
+
+#memo-list li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.memo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ccc;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.memo-header strong {
+    font-size: 1.2em;
+    color: #0056b3;
+}
+
+#memo-list p {
+    margin: 0 0 15px 0;
+    white-space: pre-wrap; /* メモの改行をそのまま表示する */
+    flex-grow: 1; /* 内容が伸びるようにする */
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-end; /* ボタンを右下に配置 */
+    width: auto; /* 幅を自動調整 */
+    font-size: 14px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+/* --- 科目グループ表示用のスタイル --- */
+
+/* 科目名の見出し (h3) */
+.subject-group-header {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 10px 15px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border-left: 5px solid #007bff;
+}
+
+/* 科目ごとのメモリスト (ul) */
+.subject-memo-list {
+    list-style: none;
+    padding-left: 20px; /* 少しインデントさせる */
+    border-left: 2px solid #eee;
+}
+
+/* 最初の科目の見出しだけ、上の余白をなくす */
+#memo-list > .subject-group-header:first-of-type {
+    margin-top: 0;
+}
