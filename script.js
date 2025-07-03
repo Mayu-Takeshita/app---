@@ -26,14 +26,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. 処理で使う関数を定義
 
-    /** 科目リストのプルダウンを生成する関数 */
+
     const populateSubjectDropdown = () => {
+        // ★★★★★ ここから変更 ★★★★★
+        // 最初に「選択してください」という項目を追加
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "科目を選択してください";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        subjectSelect.appendChild(defaultOption);
+        
+        // その後に、mySubjectsのリストを追加していく
         mySubjects.forEach(subject => {
             const option = document.createElement('option');
             option.value = subject;
             option.textContent = subject;
             subjectSelect.appendChild(option);
         });
+        // ★★★★★ ここまで変更 ★★★★★
     };
 
     /** LocalStorageからメモの配列を取得する関数 */
