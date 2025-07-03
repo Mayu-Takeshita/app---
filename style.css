@@ -1,10 +1,10 @@
 /* 全体の設定 */
 body {
-    background-color: #f4f4f4;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 main.container {
-    padding-top: 2rem;
+    padding-top: 1rem;
     padding-bottom: 2rem;
 }
 
@@ -13,30 +13,32 @@ article {
     margin-bottom: 2rem;
 }
 
-/* --- 科目グループ表示用のスタイル --- */
-
-/* 科目名の見出し (h3) */
-.subject-group-header {
-    background-color: var(--card-background-color);
-    border-bottom: 2px solid var(--primary);
-    padding: 0.75rem 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+/* ヘッダーのダークモードスイッチ */
+#theme-switcher {
+    width: auto;
+    margin-right: 0.5rem;
 }
 
-/* 科目ごとのメモリスト (ul) */
+/* 隠すための汎用クラス */
+.hidden { display: none; }
+
+/* 科目見出し */
+.subject-group-header {
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
 .subject-memo-list {
     list-style: none;
     padding: 0;
-    margin: 0;
 }
 
-/* 最初の科目の見出しだけ、上の余白をなくす */
 #memo-list-container > .subject-group-header:first-of-type {
     margin-top: 0;
 }
 
-/* メモ１件のデザイン */
+/* メモ１件 */
 .subject-memo-list li {
     background-color: var(--card-background-color);
     border: 1px solid var(--card-border-color);
@@ -52,52 +54,64 @@ article {
     margin-bottom: 0.75rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px dashed var(--muted-border-color);
-    font-size: 0.9em;
-    color: var(--muted-color);
 }
 
 .memo-header strong {
-    font-size: 1.2em;
-    color: var(--primary-focus);
+    color: var(--primary);
+    font-weight: 600;
 }
 
-.subject-memo-list p {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    white-space: pre-wrap;
+.memo-body {
     word-wrap: break-word;
 }
+.memo-body p, .memo-body ul, .memo-body ol {
+    margin-bottom: 0.5rem;
+}
 
-.delete-btn {
-    background-color: var(--secondary);
-    color: var(--secondary-inverse);
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9em;
+.memo-image {
+    max-width: 100%;
+    margin-top: 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+/* 編集モード */
+.memo-body textarea.edit-area {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 1rem;
+}
+
+.memo-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.memo-actions button {
     width: auto;
-    margin-left: auto; /* ボタンを右寄せ */
+    font-size: 0.9em;
+    padding: 0.5rem 0.75rem;
+}
+
+/* 画像プレビュー */
+#image-preview-container { margin: 1rem 0; }
+#image-preview {
+    max-width: 200px;
+    max-height: 200px;
     display: block;
+    margin-bottom: 0.5rem;
 }
 
-.delete-btn:hover {
-    background-color: var(--secondary-hover);
+/* 並び替え */
+.sort-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
-/* style.css の一番下に追加 */
+.sort-container label {
+    margin-bottom: 0;
+}
 
-/* メモのヘッダー部分のスタイルを上書き */
-.memo-header {
-    /* 日付の色は元のままでも良いが、少し濃くするなら */
-    color: hsl(205, 10%, 40%); 
-}
-
-/* メモのヘッダー内の科目名（太字）の色を上書き */
-.memo-header strong {
-    /* var(--primary) はPico.cssのメインカラー（青色）を参照する便利な変数 */
-    color: var(--primary); 
-    font-weight: 600; /* 少し太くする */
-}
-/* style.css の一番下に追加 */
-
-/* 隠すための汎用クラス */
-.hidden {
-    display: none;
-}
+/* アイコン */
+i { margin-right: 0.5em; }

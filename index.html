@@ -5,58 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>授業メモ整理アプリ</title>
 
-    <!-- Pico.css のリンク -->
+    <!-- Pico.css と アイコンライブラリ -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- 自分のカスタムCSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <main class="container">
-        <header>
-            <h1>授業メモ整理アプリ</h1>
-        </header>
+    <header class="container">
+        <nav>
+            <ul>
+                <li><strong><i class="fas fa-book"></i> 授業メモ整理アプリ</strong></li>
+            </ul>
+            <ul>
+                <li>
+                    <label for="theme-switcher">
+                        <input type="checkbox" id="theme-switcher" role="switch">
+                        ダークモード
+                    </label>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
+    <main class="container">
         <!-- メモ入力フォーム -->
         <article>
             <h2 id="new-memo-header">新しいメモを登録</h2>
             <form id="memo-form">
                 <div class="grid">
-                    <label for="subject-select">
-                        科目
-                        <select id="subject-select" required>
-                       
-                        </select>
+                    <label for="subject-select">科目
+                        <select id="subject-select" required></select>
                     </label>
                 </div>
-            　　 <!-- 普段はCSSで隠しておく、手動入力用のラッパー -->
                 <div id="custom-subject-wrapper" class="hidden">
-                    <label for="custom-subject-text">
-                        科目名を手動で入力
+                    <label for="custom-subject-text">科目名を手動で入力
                         <input type="text" id="custom-subject-text" placeholder="例：特別講義A">
                     </label>
                 </div>
-                <label for="memo-text">メモ</label>
-                <textarea id="memo-text" rows="4" placeholder="授業のメモを入力..." required></textarea>
+                <label for="memo-text">メモ (Markdown対応)</label>
+                <textarea id="memo-text" rows="5" placeholder="例： **重要事項** や - リストが使えます" required></textarea>
+                
+                <label for="memo-image">写真を追加 (任意)</label>
+                <input type="file" id="memo-image" accept="image/*">
+                <div id="image-preview-container" class="hidden">
+                    <img id="image-preview" src="#" alt="画像プレビュー">
+                    <button type="button" id="remove-image-btn" class="secondary outline">画像を削除</button>
+                </div>
+                
                 <button type="submit">登録する</button>
             </form>
         </article>
 
         <!-- メモ表示エリア -->
         <article>
-            <h2>メモ一覧</h2>
+            <div class="grid">
+                <h2><i class="fas fa-list-ul"></i> メモ一覧</h2>
+                <div class="sort-container">
+                    <label for="sort-order">並び替え:
+                        <select id="sort-order">
+                            <option value="date-desc">日付の新しい順</option>
+                            <option value="date-asc">日付の古い順</option>
+                            <option value="subject-asc">科目名の昇順</option>
+                            <option value="subject-desc">科目名の降順</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
 
-            <!-- 検索ボックス -->
             <input type="search" id="search-box" placeholder="キーワードでメモを検索...">
             
-            <!-- メモリスト本体 -->
-            <div id="memo-list-container">
-                <!-- JavaScriptがここに科目ごとのリストを追加します -->
+            <div id="memo-list-container"></div>
+        </article>
+
+        <!-- データ管理エリア -->
+        <article>
+            <h2><i class="fas fa-database"></i> データ管理</h2>
+            <div class="grid">
+                <button id="export-btn"><i class="fas fa-file-export"></i> 全データをエクスポート</button>
+                <div>
+                    <label for="import-file"><i class="fas fa-file-import"></i> データをインポート
+                        <input type="file" id="import-file" accept=".json">
+                    </label>
+                </div>
             </div>
         </article>
     </main>
 
+    <!-- Marked.js ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
