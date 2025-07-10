@@ -74,9 +74,13 @@ body {
     min-height: 100px;
 }
 .class-cell.filled {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--glass-border);
+    background: rgba(0, 0, 0, 0.03); /* ライトモードでも薄い背景色をつける */
+    border-color: rgba(0, 0, 0, 0.08); /* ライトモードでも薄い枠線をつける */
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     font-size: 0.9rem;
 }
 .class-cell.filled:hover {
