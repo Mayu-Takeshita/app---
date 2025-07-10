@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sortOrderSelect = document.getElementById('sort-order');
     const exportBtn = document.getElementById('export-btn');
     const importFile = document.getElementById('import-file');
+    const showAllBtn = document.getElementById('show-all-btn');
     let currentImageBase64 = null;
 
     // --- 関数定義 ---
@@ -60,14 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
         timetableContainer.appendChild(document.createElement('div'));
         dayOrder.forEach(day => {
             const dayCell = document.createElement('div');
-            dayCell.className = 'day-header';
-            dayCell.textContent = day;
+            dayCell.className = 'day-header'; dayCell.textContent = day;
             timetableContainer.appendChild(dayCell);
         });
         for (let period = 1; period <= periodCount; period++) {
             const timeCell = document.createElement('div');
-            timeCell.className = 'time-slot';
-            timeCell.textContent = period;
+            timeCell.className = 'time-slot'; timeCell.textContent = period;
             timetableContainer.appendChild(timeCell);
             dayOrder.forEach(day => {
                 const subject = timetableData[day]?.[period] || null;
@@ -88,10 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const populateSubjectDropdown = () => {
         subjectSelect.innerHTML = '';
         const defaultOption = document.createElement('option');
-        defaultOption.value = "";
-        defaultOption.textContent = "科目を選択してください";
-        defaultOption.disabled = true;
-        defaultOption.selected = true;
+        defaultOption.value = ""; defaultOption.textContent = "科目を選択してください";
+        defaultOption.disabled = true; defaultOption.selected = true;
         subjectSelect.appendChild(defaultOption);
         dayOrderForSelect.forEach(day => {
             const subjects = subjectsByDay[day];
@@ -112,7 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderMemos = () => {
         const memos = loadMemos();
         const searchTerm = searchBox.value.toLowerCase();
-        let filteredMemos = memos.filter(memo => memo.subject.toLowerCase().includes(searchTerm) || memo.memo.toLowerCase().includes(searchTerm));
+        let filteredMemos = memos;
+        if (searchTerm) {
+            filteredMemos = memos.filter(memo => memo.subject.toLowerCase().includes(searchTerm) || memo.memo.toLowerCase().includes(searchTerm));
+        }
         const sortOrder = sortOrderSelect.value;
         if (sortOrder === 'date-asc') { filteredMemos.sort((a, b) => a.id - b.id); } 
         else if (sortOrder === 'date-desc') { filteredMemos.sort((a, b) => b.id - a.id); } 
@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const groupedMemos = filteredMemos.reduce((acc, memo) => { (acc[memo.subject] = acc[memo.subject] || []).push(memo); return acc; }, {});
         const sortedSubjects = Object.keys(groupedMemos).sort((a, b) => {
+            if (!groupedMemos[a] || !groupedMemos[b]) return 0;
             if (sortOrder.includes('subject')) { return sortOrder === 'subject-asc' ? a.localeCompare(b) : b.localeCompare(a); }
             const lastMemoA = groupedMemos[a].reduce((p, c) => p.id > c.id ? p : c);
             const lastMemoB = groupedMemos[b].reduce((p, c) => p.id > c.id ? p : c);
@@ -166,11 +167,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 subjectSelect.value = subject;
                 customSubjectWrapper.classList.add('hidden');
                 customSubjectText.required = false;
-                searchBox.value = '';
+                searchBox.value = subject;
                 renderMemos();
                 window.scrollTo(0, 0);
             }, 50);
         }
+    });
+    showAllBtn.addEventListener('click', () => {
+        searchBox.value = '';
+        renderMemos();
     });
     memoForm.addEventListener('submit', e => {
         e.preventDefault();

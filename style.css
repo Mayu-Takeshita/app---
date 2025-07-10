@@ -72,16 +72,21 @@ body {
     border: 1px solid transparent;
     transition: all 0.3s ease;
     min-height: 100px;
+    word-break: break-all;
 }
 .class-cell.filled {
-    background: rgba(0, 0, 0, 0.03); /* ライトモードでも薄い背景色をつける */
-    border-color: rgba(0, 0, 0, 0.08); /* ライトモードでも薄い枠線をつける */
+    background: rgba(0, 0, 0, 0.03); /* ライトモード用の色を追加 */
+    border-color: rgba(0, 0, 0, 0.08); /* ライトモード用の色を追加 */
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     font-size: 0.9rem;
+}
+[data-theme="dark"] .class-cell.filled {
+    background: rgba(255, 255, 255, 0.05); /* ダークモード用の色を再指定 */
+    border-color: var(--glass-border);
 }
 .class-cell.filled:hover {
     transform: scale(1.05);
@@ -98,7 +103,8 @@ body {
 .glass-card h2 { font-weight: 700; margin-top:0; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); }
 .glass-card h2 i { margin-right: 0.5em; }
 #memo-form label { font-weight: 700; margin-bottom: 0.5rem; display: block; }
-#memo-form select, #memo-form textarea, #memo-form input[type="text"], input[type="search"], #sort-order { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 0.5rem; padding: 0.75rem; color: var(--text-color); margin-bottom: 1rem; }
+#memo-form select, #memo-form textarea, #memo-form input[type="text"], input[type="search"], #sort-order { width: 100%; background: rgba(0,0,0,0.1); border: 1px solid var(--glass-border); border-radius: 0.5rem; padding: 0.75rem; color: var(--text-color); margin-bottom: 1rem;font-family: var(--font-family);
+    font-size: 1rem; }
 .cta-button { width: 100%; padding: 1rem; font-size: 1.2rem; font-weight: 800; border: none; border-radius: 0.5rem; background: var(--primary-color); color: white; cursor: pointer; transition: all 0.3s ease; }
 .cta-button:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 #image-preview-container { margin: 1rem 0; }
@@ -121,3 +127,15 @@ body {
 textarea.edit-area { width: 100%; height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--primary-color); color: var(--text-color); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .hidden { display: none; }
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.search-container #search-box {
+    flex-grow: 1; /* 検索ボックスが伸びるように */
+}
+.search-container #show-all-btn {
+    flex-shrink: 0; /* ボタンが縮まないように */
+    padding: 0.75rem;
+}
