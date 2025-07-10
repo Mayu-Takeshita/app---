@@ -47,10 +47,10 @@ body {
 [data-theme="dark"] .theme-toggle .fa-sun { opacity: 1; }
 [data-theme="dark"] .theme-toggle .fa-moon { opacity: 0; }
 
-/* --- ★★★ 時間割スタイル (修正版) ★★★ --- */
+/* --- 時間割スタイル --- */
 .timetable-container {
     display: grid;
-    grid-template-columns: 50px repeat(5, 1fr); /* 1列目:時限, 2-6列目:曜日 */
+    grid-template-columns: 50px repeat(5, 1fr);
     gap: 0.75rem;
     padding: 1.5rem;
     background: var(--glass-bg);
@@ -75,17 +75,13 @@ body {
     word-break: break-all;
 }
 .class-cell.filled {
-    background: rgba(0, 0, 0, 0.03); /* ライトモード用の色を追加 */
-    border-color: rgba(0, 0, 0, 0.08); /* ライトモード用の色を追加 */
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     font-size: 0.9rem;
 }
 [data-theme="dark"] .class-cell.filled {
-    background: rgba(255, 255, 255, 0.05); /* ダークモード用の色を再指定 */
+    background: rgba(255, 255, 255, 0.05);
     border-color: var(--glass-border);
 }
 .class-cell.filled:hover {
@@ -103,13 +99,18 @@ body {
 .glass-card h2 { font-weight: 700; margin-top:0; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); }
 .glass-card h2 i { margin-right: 0.5em; }
 #memo-form label { font-weight: 700; margin-bottom: 0.5rem; display: block; }
-#memo-form select, #memo-form textarea, #memo-form input[type="text"], input[type="search"], #sort-order { width: 100%; background: rgba(0,0,0,0.1); border: 1px solid var(--glass-border); border-radius: 0.5rem; padding: 0.75rem; color: var(--text-color); margin-bottom: 1rem;font-family: var(--font-family);
-    font-size: 1rem; }
+#memo-form select, #memo-form textarea, #memo-form input[type="text"], input[type="search"], #sort-order {
+    width: 100%; background: rgba(0,0,0,0.1); border: 1px solid var(--glass-border); border-radius: 0.5rem;
+    padding: 0.75rem; color: var(--text-color); margin-bottom: 1rem; font-family: var(--font-family); font-size: 1rem;
+}
 .cta-button { width: 100%; padding: 1rem; font-size: 1.2rem; font-weight: 800; border: none; border-radius: 0.5rem; background: var(--primary-color); color: white; cursor: pointer; transition: all 0.3s ease; }
 .cta-button:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 #image-preview-container { margin: 1rem 0; }
 #image-preview { max-width: 150px; display: block; margin-bottom: 0.5rem; border-radius: 8px; }
 .secondary-btn { font-size: 1rem; font-weight: 700; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; background: var(--secondary-color); color: white; }
+.search-container { display: flex; gap: 0.5rem; align-items: center; }
+.search-container #search-box { flex-grow: 1; }
+.search-container #show-all-btn { flex-shrink: 0; padding: 0.75rem; }
 .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .list-header h2 { margin: 0; }
 .subject-group-header { font-weight: 800; font-size: 1.5rem; margin-top: 2rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary-color); }
@@ -127,15 +128,3 @@ body {
 textarea.edit-area { width: 100%; height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--primary-color); color: var(--text-color); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .hidden { display: none; }
-.search-container {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-.search-container #search-box {
-    flex-grow: 1; /* 検索ボックスが伸びるように */
-}
-.search-container #show-all-btn {
-    flex-shrink: 0; /* ボタンが縮まないように */
-    padding: 0.75rem;
-}
