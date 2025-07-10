@@ -160,6 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderImagePreviews = () => {
         imagePreviewContainer.innerHTML = '';
+        if (currentImages.length > 0) {
+            imagePreviewContainer.classList.remove('hidden');
+        } else {
+            imagePreviewContainer.classList.add('hidden');
+        }
         currentImages.forEach((image, index) => {
             const previewItem = document.createElement('div');
             previewItem.className = 'preview-item';
@@ -232,8 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     memoImageInput.addEventListener('change', (e) => {
         const files = e.target.files; if (!files || files.length === 0) return;
-        resetImageInput();
-        imagePreviewContainer.classList.remove('hidden');
         const filePromises = Array.from(files).map(file => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -250,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const indexToRemove = parseInt(e.target.dataset.index, 10);
             currentImages.splice(indexToRemove, 1);
             renderImagePreviews();
+            memoImageInput.value = '';
         }
     });
     searchBox.addEventListener('input', renderMemos);
