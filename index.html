@@ -8,7 +8,7 @@
     <!-- PWA / Icon Settings -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192x192.png">
-    <meta name="theme-color" content="#16213e"/>
+    <meta name="theme-color" content="#0f172a"/>
     
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,16 @@
         <section id="timetable-page" class="page active">
             <header class="app-header">
                 <h1><i class="fas fa-th-large"></i> My Timetable</h1>
-                <button id="goto-memo-page-btn" class="header-btn"><i class="fas fa-pen-to-square"></i> メモを書く・見る</button>
+                <div class="header-controls">
+                    <label for="theme-switcher" class="theme-toggle">
+                        <input type="checkbox" id="theme-switcher" role="switch">
+                        <span class="toggle-track">
+                            <i class="fas fa-sun"></i>
+                            <i class="fas fa-moon"></i>
+                        </span>
+                    </label>
+                    <button id="goto-memo-page-btn" class="header-btn"><i class="fas fa-pen-to-square"></i> メモを書く・見る</button>
+                </div>
             </header>
             <main>
                 <div class="timetable-container">
@@ -57,10 +66,12 @@
                 <h1><i class="fas fa-book-open"></i> Class Notes</h1>
             </header>
             <main>
-                <!-- この中身は、次のステップで実装します -->
                 <div id="memo-content-area">
-                    <!-- ここにメモ入力フォームや一覧が入る -->
-                    <p>メモ機能は次のステップで実装します。</p>
+                    <!-- この中身は、次のステップで実装します -->
+                    <article class="glass-card">
+                        <h2>次のステップ</h2>
+                        <p>ここにメモの入力フォームと一覧が表示されるようになります。</p>
+                    </article>
                 </div>
             </main>
         </section>

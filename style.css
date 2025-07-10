@@ -1,71 +1,235 @@
-/* 基本的なリセットとフォント設定 */
-body {
-    font-family: sans-serif;
-    margin: 0;
-    background-color: #f0f0f0;
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap');
+
+/* --- CSS変数定義 --- */
+:root {
+    --bg-color: #f0f4f8;
+    --text-color: #1c1e21;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --accent-color-1: #86A8E7;
+    --accent-color-2: #91EAE4;
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --font-family: 'M PLUS 1p', sans-serif;
 }
 
-/* ページ切り替え用スタイル */
+[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --text-color: #e2e8f0;
+    --primary-color: #38bdf8;
+    --secondary-color: #94a3b8;
+    --accent-color-1: #4a00e0;
+    --accent-color-2: #8e2de2;
+    --glass-bg: rgba(30, 41, 59, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+/* --- 基本スタイルと背景 --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    overflow-x: hidden;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.background-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: -1;
+    opacity: 0.25;
+    transition: transform 1s ease-out;
+}
+#orb1 {
+    width: 60vmax;
+    height: 60vmax;
+    top: -20vmax;
+    left: -20vmax;
+    background: radial-gradient(circle, var(--accent-color-1), transparent 60%);
+}
+#orb2 {
+    width: 70vmax;
+    height: 70vmax;
+    bottom: -30vmax;
+    right: -30vmax;
+    background: radial-gradient(circle, var(--accent-color-2), transparent 70%);
+}
+
+/* --- アプリケーションコンテナ --- */
+#app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- ページ切り替えアニメーション --- */
 .page {
-    display: none; /* 普段は非表示 */
+    display: none;
 }
 .page.active {
-    display: block; /* activeクラスが付いたら表示 */
+    display: block;
+    animation: fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ヘッダー */
+/* --- ヘッダースタイル --- */
 .app-header {
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    color: var(--text-color);
 }
 .app-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
     margin: 0;
-    font-size: 1.5rem;
+}
+.app-header h1 i {
+    margin-right: 0.75rem;
+    color: var(--primary-color);
+}
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.header-btn {
+    font-family: var(--font-family);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+.header-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px var(--shadow-color);
 }
 
-main {
-    padding: 1rem;
+/* --- ダークモードトグルスイッチ --- */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.theme-toggle input {
+    display: none;
+}
+.theme-toggle .toggle-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 2.5rem;
+    height: 1.25rem;
+}
+.theme-toggle i {
+    font-size: 1rem;
+    position: absolute;
+    transition: opacity 0.3s ease;
+}
+.theme-toggle .fa-sun {
+    left: 0;
+    opacity: 0;
+}
+.theme-toggle .fa-moon {
+    right: 0;
+    opacity: 1;
+}
+[data-theme="dark"] .theme-toggle .fa-sun {
+    opacity: 1;
+}
+[data-theme="dark"] .theme-toggle .fa-moon {
+    opacity: 0;
 }
 
-/* 時間割のグリッドレイアウト */
+/* --- 時間割スタイル --- */
 .timetable-container {
     display: grid;
-    /* 1列目: 時限表示用, 2列目以降: 月〜金 */
-    grid-template-columns: 60px repeat(5, 1fr);
-    gap: 8px;
-    margin-top: 1rem;
+    grid-template-columns: 50px repeat(5, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
 }
-
 #timetable-grid {
-    /* 時限表示用の列をスキップして、月曜日の列から開始 */
     grid-column: 2 / -1;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
+    grid-auto-rows: minmax(100px, auto);
+    gap: 1rem;
 }
 .day-header {
+    grid-row: 1;
+    font-weight: 800;
     text-align: center;
-    font-weight: bold;
-    padding: 0.5rem;
-    background-color: #e0e0e0;
-    border-radius: 4px;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
 }
 .class-cell {
-    border: 1px solid #ccc;
-    min-height: 80px;
-    padding: 0.5rem;
-    border-radius: 4px;
-    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    font-weight: 700;
 }
 .class-cell.filled {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--glass-border);
     cursor: pointer;
-    font-weight: bold;
-    background-color: #d4edda;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0.9rem;
 }
 .class-cell.filled:hover {
-    background-color: #c3e6cb;
+    transform: scale(1.05);
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+/* --- Glassmorphism Card Style for Memo Page --- */
+.glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
