@@ -3,98 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>授業メモ整理アプリ</title>
+    <title>IntelliNote - 授業メモ整理アプリ</title>
 
-    <!-- Pico.css と アイコンライブラリ -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <!-- PWA / Icon Settings -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <meta name="theme-color" content="#16213e"/>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 自分のカスタムCSS -->
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 動的な背景 -->
+    <div class="background-orb" id="orb1"></div>
+    <div class="background-orb" id="orb2"></div>
 
-    <header class="container">
-        <nav>
-            <ul>
-                <li><strong><i class="fas fa-book"></i> 授業メモ整理アプリ</strong></li>
-            </ul>
-            <ul>
-                <li>
-                    <label for="theme-switcher">
-                        <input type="checkbox" id="theme-switcher" role="switch">
-                        ダークモード
-                    </label>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <!-- ===== アプリケーションコンテナ ===== -->
+    <div id="app-container">
 
-    <main class="container">
-        <!-- メモ入力フォーム -->
-        <article>
-            <h2 id="new-memo-header">新しいメモを登録</h2>
-            <form id="memo-form">
-                <div class="grid">
-                    <label for="subject-select">科目
-                        <select id="subject-select" required></select>
-                    </label>
+        <!-- ===== 時間割ページ (初期表示) ===== -->
+        <section id="timetable-page" class="page active">
+            <header class="app-header">
+                <h1><i class="fas fa-th-large"></i> My Timetable</h1>
+                <button id="goto-memo-page-btn" class="header-btn"><i class="fas fa-pen-to-square"></i> メモを書く・見る</button>
+            </header>
+            <main>
+                <div class="timetable-container">
+                    <!-- ヘッダー (曜日) -->
+                    <div class="day-header"></div> <!-- 左上の空セル -->
+                    <div class="day-header">月</div>
+                    <div class="day-header">火</div>
+                    <div class="day-header">水</div>
+                    <div class="day-header">木</div>
+                    <div class="day-header">金</div>
+                    <!-- グリッド本体 -->
+                    <div id="timetable-grid">
+                        <!-- JavaScriptがここに時間割のコマを生成します -->
+                    </div>
                 </div>
-                <div id="custom-subject-wrapper" class="hidden">
-                    <label for="custom-subject-text">科目名を手動で入力
-                        <input type="text" id="custom-subject-text" placeholder="例：特別講義A">
-                    </label>
-                </div>
-                <label for="memo-text">メモ (Markdown対応)</label>
-                <textarea id="memo-text" rows="5" placeholder="例： **太字** や # 見出し、~~打ち消し線~~が使えます" required></textarea>
-                
-                <label for="memo-image">写真を追加 (任意)</label>
-                <input type="file" id="memo-image" accept="image/*">
-                <div id="image-preview-container" class="hidden">
-                    <img id="image-preview" src="#" alt="画像プレビュー">
-                    <button type="button" id="remove-image-btn" class="secondary outline">画像を削除</button>
-                </div>
-                
-                <button type="submit">登録する</button>
-            </form>
-        </article>
+            </main>
+        </section>
 
-        <!-- メモ表示エリア -->
-        <article>
-            <div class="grid">
-                <h2><i class="fas fa-list-ul"></i> メモ一覧</h2>
-                <div class="sort-container">
-                    <label for="sort-order">並び替え:
-                        <select id="sort-order">
-                            <option value="date-desc">日付の新しい順</option>
-                            <option value="date-asc">日付の古い順</option>
-                            <option value="subject-asc">科目名の昇順</option>
-                            <option value="subject-desc">科目名の降順</option>
-                        </select>
-                    </label>
+        <!-- ===== メモページ (最初は非表示) ===== -->
+        <section id="memo-page" class="page">
+            <header class="app-header">
+                <button id="goto-timetable-page-btn" class="header-btn"><i class="fas fa-arrow-left"></i> 時間割に戻る</button>
+                <h1><i class="fas fa-book-open"></i> Class Notes</h1>
+            </header>
+            <main>
+                <!-- この中身は、次のステップで実装します -->
+                <div id="memo-content-area">
+                    <!-- ここにメモ入力フォームや一覧が入る -->
+                    <p>メモ機能は次のステップで実装します。</p>
                 </div>
-            </div>
+            </main>
+        </section>
 
-            <input type="search" id="search-box" placeholder="キーワードでメモを検索...">
-            
-            <div id="memo-list-container"></div>
-        </article>
+    </div>
 
-        <!-- データ管理エリア -->
-        <article>
-            <h2><i class="fas fa-database"></i> データ管理</h2>
-            <div class="grid">
-                <button id="export-btn"><i class="fas fa-file-export"></i> 全データをエクスポート</button>
-                <div>
-                    <label for="import-file"><i class="fas fa-file-import"></i> データをインポート
-                        <input type="file" id="import-file" accept=".json">
-                    </label>
-                </div>
-            </div>
-        </article>
-    </main>
-
-    <!-- Marked.js ライブラリ -->
+    <!-- JavaScript Files -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>
