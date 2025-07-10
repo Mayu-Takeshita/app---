@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // (データ定義、HTML要素取得は変更なし)
     // --- データ定義 ---
     const dayOrder = ["月", "火", "水", "木", "金"];
     const periodCount = 5;
@@ -196,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
         searchBox.value = '';
         renderMemos();
     });
-    
     memoForm.addEventListener('submit', e => {
         e.preventDefault();
         let subject = subjectSelect.value;
@@ -205,29 +203,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!subject || !memo) { alert('科目とメモの両方を入力してください。'); return; }
         const memos = loadMemos();
         const now = new Date();
-        memos.push({ 
-            id: Date.now(), 
-            subject, 
-            memo, 
-            images: currentImages.map(img => img.base64), 
-            date: `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` 
-        });
-        saveMemos(memos); 
-        renderMemos(); 
-        memoForm.reset(); 
-        subjectSelect.value = "";
-        customSubjectWrapper.classList.add('hidden'); 
-        customSubjectText.required = false; 
-        resetImageInput();
+        memos.push({ id: Date.now(), subject, memo, images: currentImages.map(img => img.base64), date: `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` });
+        saveMemos(memos); renderMemos(); memoForm.reset(); subjectSelect.value = "";
+        customSubjectWrapper.classList.add('hidden'); customSubjectText.required = false; resetImageInput();
     });
-
     subjectSelect.addEventListener('change', e => {
         const isOther = e.target.value === '__other__';
         customSubjectWrapper.classList.toggle('hidden', !isOther);
         customSubjectText.required = isOther;
         if (isOther) customSubjectText.focus();
     });
-
     memoListContainer.addEventListener('click', e => {
         const target = e.target;
         const listItem = target.closest('li');
@@ -250,50 +235,57 @@ document.addEventListener('DOMContentLoaded', () => {
             newWindow.document.write(`<body style="margin:0; background:#111;"><img src="${target.src}" style="width:100%;"></body>`);
         }
     });
-
+    
     // ★★★★★ 画像関連のイベントリスナーを最終修正 ★★★★★
     memoImageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            currentImages.push({
-                base64: event.target.result,
-                name: file.name
-            });
-            renderImagePreviews();
-        };
-        reader.onerror = () => {
-            alert("画像の読み込みに失敗しました。");
-        };
-        reader.readAsDataURL(file);
+        // 複数選択されたファイルを一つずつ処理
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                // 新しい画像を配列の末尾に追加
+                currentImages.push({
+                    base64: event.target.result,
+                    name: file.name
+                });
+                // プレビューを再描画
+                renderImagePreviews();
+            };
+            reader.onerror = () => {
+                alert(`画像「${file.name}」の読み込みに失敗しました。`);
+            };
+            reader.readAsDataURL(file);
+        });
         
-        e.target.value = ''; // これが重要！同じファイルを連続で選択できるようにする
+        // ファイル選択をクリアして、同じファイルを連続で選べるようにする
+        e.target.value = '';
     });
 
     imagePreviewContainer.addEventListener('click', e => {
         if (e.target.classList.contains('remove-preview-btn')) {
             const indexToRemove = parseInt(e.target.dataset.index, 10);
             if (!isNaN(indexToRemove)) {
-                currentImages.splice(indexToRemove, 1);
-                renderImagePreviews();
+                currentImages.splice(indexToRemove, 1); // 配列から削除
+                renderImagePreviews(); // プレビューを再描画
             }
         }
     });
     
     searchBox.addEventListener('input', renderMemos);
     sortOrderSelect.addEventListener('change', renderMemos);
-
     exportBtn.addEventListener('click', () => {
         const memos = loadMemos(); if (memos.length === 0) { alert('エクスポートするデータがありません。'); return; }
         const dataStr = JSON.stringify(memos, null, 2);
         const blob = new Blob([dataStr], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = `memo-app-backup-${new Date().toISOString().slice(0, 10)}.json`;
-        a.click(); URL.revokeObjectURL(url);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
-
     importFile.addEventListener('change', e => {
         const file = e.target.files[0]; if (!file) return;
         const reader = new FileReader();
@@ -307,7 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else { alert('無効なファイル形式です。'); }
             } catch { alert('ファイルの読み込みに失敗しました。'); }
         };
-        reader.readAsText(file); e.target.value = '';
+        reader.readAsText(file);
+        e.target.value = '';
     });
 
     // --- 初期化処理 ---
