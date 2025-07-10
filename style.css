@@ -3,11 +3,13 @@
 
 /* --- CSS変数定義 --- */
 :root {
+    color-scheme: light; /* ブラウザにライトモードだと伝える */
     --bg-color: #f0f4f8; --text-color: #1c1e21; --primary-color: #007bff; --secondary-color: #6c757d;
     --accent-color-1: #86A8E7; --accent-color-2: #91EAE4; --glass-bg: rgba(255, 255, 255, 0.5);
     --glass-border: rgba(255, 255, 255, 0.2); --shadow-color: rgba(0, 0, 0, 0.1); --font-family: 'M PLUS 1p', sans-serif;
 }
 [data-theme="dark"] {
+    color-scheme: dark; /* ブラウザにダークモードだと伝える */
     --bg-color: #0f172a; --text-color: #e2e8f0; --primary-color: #38bdf8; --secondary-color: #94a3b8;
     --accent-color-1: #4a00e0; --accent-color-2: #8e2de2; --glass-bg: rgba(30, 41, 59, 0.4);
     --glass-border: rgba(255, 255, 255, 0.1); --shadow-color: rgba(0, 0, 0, 0.2);
@@ -72,7 +74,8 @@ body {
     border: 1px solid transparent;
     transition: all 0.3s ease;
     min-height: 100px;
-    word-break: break-all;
+    word-break: break-all; /* ★★★ スマホでの縦書き対策 ★★★ */
+    line-height: 1.3;
 }
 .class-cell.filled {
     background: rgba(0, 0, 0, 0.03);
@@ -128,3 +131,21 @@ body {
 textarea.edit-area { width: 100%; height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--primary-color); color: var(--text-color); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .hidden { display: none; }
+
+/* ★★★★★ スマホ表示用の特別スタイルを追加 ★★★★★ */
+@media (max-width: 600px) {
+    .app-header h1 { font-size: 1.5rem; }
+    .header-btn { font-size: 0.9rem; padding: 0.5rem 1rem; }
+    .timetable-container {
+        grid-template-columns: 35px repeat(5, 1fr);
+        gap: 0.5rem;
+        padding: 0.75rem;
+        font-size: 12px;
+    }
+    .class-cell {
+        min-height: 80px;
+        padding: 4px;
+        font-size: 11px;
+    }
+    .memo-grid { grid-template-columns: 1fr; }
+}
