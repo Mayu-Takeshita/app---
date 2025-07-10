@@ -51,18 +51,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveMemos = (memos) => localStorage.setItem('memos', JSON.stringify(memos));
 
     const renderTimetable = () => {
-        timetableGrid.innerHTML = '';
+        timetableGrid.innerHTML = ''; // グリッドの中身を一度リセット
+
+        // HTMLに既にある時限表示用のヘッダーコンテナを取得
         const timeHeaderContainer = document.querySelector('.timetable-container');
-        if (!timeHeaderContainer.querySelector('.time-slot')) {
-            const timeSlots = Array.from({length: periodCount}, (_, i) => `<div class="day-header time-slot">${i + 1}</div>`).join('');
-            const firstDayHeader = timeHeaderContainer.querySelector('.day-header');
-            if(firstDayHeader) firstDayHeader.insertAdjacentHTML('afterend', timeSlots);
+        // 古い時限ヘッダーが残っていれば削除
+        timeHeaderContainer.querySelectorAll('.time-slot').forEach(el => el.remove());
+
+        // 新しく時限ヘッダー（1〜5）を生成して配置
+        const timeSlots = Array.from({length: periodCount}, (_, i) => `<div class="day-header time-slot">${i + 1}</div>`).join('');
+        // 曜日の最初のヘッダー（左上の空セル）の後ろに時限ヘッダーを挿入
+        const firstDayHeader = timeHeaderContainer.querySelector('.day-header');
+        if(firstDayHeader) {
+            firstDayHeader.insertAdjacentHTML('afterend', timeSlots);
         }
+        
+        // 科目のコマを生成してグリッドに追加
         for (let period = 1; period <= periodCount; period++) {
             for (const day of dayOrder) {
                 const subject = timetableData[day]?.[period] || null;
                 const cell = document.createElement('div');
                 cell.className = 'class-cell';
+                
                 if (subject) {
                     cell.textContent = subject;
                     cell.dataset.subject = subject;
@@ -70,11 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     cell.classList.add('empty');
                 }
+                
+                // 正しい位置に配置
                 timetableGrid.appendChild(cell);
             }
         }
     };
-
     const populateSubjectDropdown = () => {
         subjectSelect.innerHTML = '';
         const defaultOption = document.createElement('option');
@@ -212,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const listItem = target.closest('li');
         if (!listItem) return;
         const memoId = Number(listItem.dataset.id);
-
         if (target.classList.contains('delete-btn')) {
             if (confirm('このメモを本当に削除しますか？')) {
                 saveMemos(loadMemos().filter(m => m.id !== memoId));
