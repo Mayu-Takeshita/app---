@@ -53,8 +53,13 @@
                                 </div>
                                 <label for="memo-text">メモ (Markdown対応)</label>
                                 <textarea id="memo-text" rows="5" placeholder="**太字** や - リストが使えます" required></textarea>
-                                <label for="memo-image">写真を追加 (任意)</label>
-                                <input type="file" id="memo-image" accept="image/*">
+                                
+                                <!-- ★★★★★ この部分を修正 ★★★★★ -->
+                                <label for="memo-image" role="button" class="file-upload-btn">
+                                    <i class="fas fa-camera"></i> 写真を追加
+                                    <input type="file" id="memo-image" accept="image/*">
+                                </label>
+                                
                                 <div id="image-preview-container" class="image-preview-grid hidden"></div>
                                 <button type="submit" class="cta-button"><i class="fas fa-save"></i> 登録する</button>
                             </form>
