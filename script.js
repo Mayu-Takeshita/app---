@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitcher = document.getElementById('theme-switcher');
     const timetablePage = document.getElementById('timetable-page');
     const memoPage = document.getElementById('memo-page');
-    const timetableGrid = document.getElementById('timetable-grid');
+    const timetableContainer = document.getElementById('timetable-container'); // ★★★ 取得対象を変更
     const gotoMemoPageBtn = document.getElementById('goto-memo-page-btn');
     const gotoTimetablePageBtn = document.getElementById('goto-timetable-page-btn');
     const memoForm = document.getElementById('memo-form');
@@ -50,42 +50,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadMemos = () => JSON.parse(localStorage.getItem('memos') || '[]');
     const saveMemos = (memos) => localStorage.setItem('memos', JSON.stringify(memos));
 
+    // ★★★★★ renderTimetable関数を最終修正版に置き換え ★★★★★
     const renderTimetable = () => {
-        timetableGrid.innerHTML = ''; // グリッドの中身を一度リセット
+        timetableContainer.innerHTML = ''; // コンテナを完全にクリア
 
-        // HTMLに既にある時限表示用のヘッダーコンテナを取得
-        const timeHeaderContainer = document.querySelector('.timetable-container');
-        // 古い時限ヘッダーが残っていれば削除
-        timeHeaderContainer.querySelectorAll('.time-slot').forEach(el => el.remove());
+        // 1行目のヘッダー（空セル + 曜日）を生成
+        timetableContainer.appendChild(document.createElement('div')); // 左上の空セル
+        dayOrder.forEach(day => {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'day-header';
+            dayCell.textContent = day;
+            timetableContainer.appendChild(dayCell);
+        });
 
-        // 新しく時限ヘッダー（1〜5）を生成して配置
-        const timeSlots = Array.from({length: periodCount}, (_, i) => `<div class="day-header time-slot">${i + 1}</div>`).join('');
-        // 曜日の最初のヘッダー（左上の空セル）の後ろに時限ヘッダーを挿入
-        const firstDayHeader = timeHeaderContainer.querySelector('.day-header');
-        if(firstDayHeader) {
-            firstDayHeader.insertAdjacentHTML('afterend', timeSlots);
-        }
-        
-        // 科目のコマを生成してグリッドに追加
+        // 2行目以降（時限 + 科目）を生成
         for (let period = 1; period <= periodCount; period++) {
-            for (const day of dayOrder) {
+            // まず時限のセルを追加
+            const timeCell = document.createElement('div');
+            timeCell.className = 'time-slot';
+            timeCell.textContent = period;
+            timetableContainer.appendChild(timeCell);
+
+            // 次にその行の科目セルを追加
+            dayOrder.forEach(day => {
                 const subject = timetableData[day]?.[period] || null;
-                const cell = document.createElement('div');
-                cell.className = 'class-cell';
-                
+                const subjectCell = document.createElement('div');
+                subjectCell.className = 'class-cell';
                 if (subject) {
-                    cell.textContent = subject;
-                    cell.dataset.subject = subject;
-                    cell.classList.add('filled');
+                    subjectCell.textContent = subject;
+                    subjectCell.dataset.subject = subject;
+                    subjectCell.classList.add('filled');
                 } else {
-                    cell.classList.add('empty');
+                    subjectCell.classList.add('empty');
                 }
-                
-                // 正しい位置に配置
-                timetableGrid.appendChild(cell);
-            }
+                timetableContainer.appendChild(subjectCell);
+            });
         }
     };
+    
+    // (ここから下の関数は、以前の最終版と同じです)
     const populateSubjectDropdown = () => {
         subjectSelect.innerHTML = '';
         const defaultOption = document.createElement('option');
@@ -176,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         switchPage(timetablePage);
     });
 
-    timetableGrid.addEventListener('click', e => {
+    timetableContainer.addEventListener('click', e => { // ★★★ 取得対象を変更
         if (e.target.classList.contains('filled')) {
             switchPage(memoPage);
             setTimeout(() => {
@@ -223,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const listItem = target.closest('li');
         if (!listItem) return;
         const memoId = Number(listItem.dataset.id);
+
         if (target.classList.contains('delete-btn')) {
             if (confirm('このメモを本当に削除しますか？')) {
                 saveMemos(loadMemos().filter(m => m.id !== memoId));

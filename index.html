@@ -4,61 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntelliNote - 授業メモ整理アプリ</title>
-
-    <!-- PWA / Icon Settings -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192x192.png">
     <meta name="theme-color" content="#0f172a"/>
-    
-    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 動的な背景 -->
     <div class="background-orb" id="orb1"></div>
     <div class="background-orb" id="orb2"></div>
 
-    <!-- ===== アプリケーションコンテナ ===== -->
     <div id="app-container">
-
-        <!-- ===== 時間割ページ (初期表示) ===== -->
+        <!-- ===== 時間割ページ ===== -->
         <section id="timetable-page" class="page active">
             <header class="app-header">
                 <h1><i class="fas fa-th-large"></i> My Timetable</h1>
                 <div class="header-controls">
                     <label for="theme-switcher" class="theme-toggle">
                         <input type="checkbox" id="theme-switcher" role="switch">
-                        <span class="toggle-track">
-                            <i class="fas fa-sun"></i>
-                            <i class="fas fa-moon"></i>
-                        </span>
+                        <span class="toggle-track"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></span>
                     </label>
-                    <button id="goto-memo-page-btn" class="header-btn"><i class="fas fa-pen-to-square"></i> メモを書く・見る</button>
+                    <button id="goto-memo-page-btn" class="header-btn"><i class="fas fa-pen-to-square"></i> メモ</button>
                 </div>
             </header>
             <main>
-                <div class="timetable-container">
-                    <div class="day-header"></div> <!-- 左上の空セル -->
-                    <div class="day-header">月</div>
-                    <div class="day-header">火</div>
-                    <div class="day-header">水</div>
-                    <div class="day-header">木</div>
-                    <div class="day-header">金</div>
-                    <!-- グリッド本体 -->
-                    <div id="timetable-grid">
-                        <!-- JavaScriptがここに時間割のコマを生成します -->
-                    </div>
+                <!-- ★★★ この中身がシンプルになりました ★★★ -->
+                <div id="timetable-container" class="timetable-container">
+                    <!-- JavaScriptがここに時間割の全てのセルを生成します -->
                 </div>
             </main>
         </section>
 
-        <!-- ===== メモページ (最初は非表示) ===== -->
+        <!-- ===== メモページ (中身は変更なし) ===== -->
         <section id="memo-page" class="page">
             <header class="app-header">
                 <button id="goto-timetable-page-btn" class="header-btn"><i class="fas fa-arrow-left"></i> 時間割に戻る</button>
@@ -66,33 +46,27 @@
             </header>
             <main id="memo-content-area">
                 <div class="memo-grid">
-                    <!-- 左カラム：入力フォームとデータ管理 -->
                     <div class="memo-left-column">
                         <article class="glass-card">
                             <h2 id="new-memo-header"><i class="fas fa-edit"></i> 新しいメモを登録</h2>
                             <form id="memo-form">
                                 <label for="subject-select">科目</label>
                                 <select id="subject-select" required></select>
-                                
                                 <div id="custom-subject-wrapper" class="hidden">
                                     <label for="custom-subject-text">科目名を手動で入力</label>
                                     <input type="text" id="custom-subject-text" placeholder="例：特別講義A">
                                 </div>
-                                
                                 <label for="memo-text">メモ (Markdown対応)</label>
                                 <textarea id="memo-text" rows="5" placeholder="**太字** や - リストが使えます" required></textarea>
-                                
                                 <label for="memo-image">写真を追加 (任意)</label>
                                 <input type="file" id="memo-image" accept="image/*">
                                 <div id="image-preview-container" class="hidden">
                                     <img id="image-preview" src="#" alt="画像プレビュー">
                                     <button type="button" id="remove-image-btn" class="secondary-btn">画像を削除</button>
                                 </div>
-                                
                                 <button type="submit" class="cta-button"><i class="fas fa-save"></i> 登録する</button>
                             </form>
                         </article>
-
                         <article class="glass-card">
                             <h2><i class="fas fa-database"></i> データ管理</h2>
                             <div class="grid">
@@ -103,8 +77,6 @@
                             </div>
                         </article>
                     </div>
-
-                    <!-- 右カラム：メモ一覧 -->
                     <div class="memo-right-column">
                         <article class="glass-card">
                              <div class="list-header">
