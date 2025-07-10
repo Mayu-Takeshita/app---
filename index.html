@@ -44,7 +44,6 @@
             </header>
             <main>
                 <div class="timetable-container">
-                    <!-- ヘッダー (曜日) -->
                     <div class="day-header"></div> <!-- 左上の空セル -->
                     <div class="day-header">月</div>
                     <div class="day-header">火</div>
@@ -65,20 +64,67 @@
                 <button id="goto-timetable-page-btn" class="header-btn"><i class="fas fa-arrow-left"></i> 時間割に戻る</button>
                 <h1><i class="fas fa-book-open"></i> Class Notes</h1>
             </header>
-            <main>
-                <div id="memo-content-area">
-                    <!-- この中身は、次のステップで実装します -->
-                    <article class="glass-card">
-                        <h2>次のステップ</h2>
-                        <p>ここにメモの入力フォームと一覧が表示されるようになります。</p>
-                    </article>
+            <main id="memo-content-area">
+                <div class="memo-grid">
+                    <!-- 左カラム：入力フォームとデータ管理 -->
+                    <div class="memo-left-column">
+                        <article class="glass-card">
+                            <h2 id="new-memo-header"><i class="fas fa-edit"></i> 新しいメモを登録</h2>
+                            <form id="memo-form">
+                                <label for="subject-select">科目</label>
+                                <select id="subject-select" required></select>
+                                
+                                <div id="custom-subject-wrapper" class="hidden">
+                                    <label for="custom-subject-text">科目名を手動で入力</label>
+                                    <input type="text" id="custom-subject-text" placeholder="例：特別講義A">
+                                </div>
+                                
+                                <label for="memo-text">メモ (Markdown対応)</label>
+                                <textarea id="memo-text" rows="5" placeholder="**太字** や - リストが使えます" required></textarea>
+                                
+                                <label for="memo-image">写真を追加 (任意)</label>
+                                <input type="file" id="memo-image" accept="image/*">
+                                <div id="image-preview-container" class="hidden">
+                                    <img id="image-preview" src="#" alt="画像プレビュー">
+                                    <button type="button" id="remove-image-btn" class="secondary-btn">画像を削除</button>
+                                </div>
+                                
+                                <button type="submit" class="cta-button"><i class="fas fa-save"></i> 登録する</button>
+                            </form>
+                        </article>
+
+                        <article class="glass-card">
+                            <h2><i class="fas fa-database"></i> データ管理</h2>
+                            <div class="grid">
+                                <button id="export-btn" class="secondary-btn"><i class="fas fa-file-export"></i> 全データをエクスポート</button>
+                                <label for="import-file" role="button" class="secondary-btn"><i class="fas fa-file-import"></i> データをインポート
+                                    <input type="file" id="import-file" accept=".json" class="hidden">
+                                </label>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- 右カラム：メモ一覧 -->
+                    <div class="memo-right-column">
+                        <article class="glass-card">
+                             <div class="list-header">
+                                <h2><i class="fas fa-list-ul"></i> メモ一覧</h2>
+                                <select id="sort-order">
+                                    <option value="date-desc">日付の新しい順</option>
+                                    <option value="date-asc">日付の古い順</option>
+                                    <option value="subject-asc">科目名の昇順</option>
+                                    <option value="subject-desc">科目名の降順</option>
+                                </select>
+                            </div>
+                            <input type="search" id="search-box" placeholder="キーワードでメモを検索...">
+                            <div id="memo-list-container"></div>
+                        </article>
+                    </div>
                 </div>
             </main>
         </section>
-
     </div>
 
-    <!-- JavaScript Files -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>
