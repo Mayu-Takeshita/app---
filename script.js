@@ -253,7 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderImagePreviews();
         }
     });
-    removeImageBtn.addEventListener('click', resetImageInput);
     searchBox.addEventListener('input', renderMemos);
     sortOrderSelect.addEventListener('change', renderMemos);
     exportBtn.addEventListener('click', () => {
