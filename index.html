@@ -4,52 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntelliNote - 授業メモ整理アプリ</title>
-
-    <!-- PWA / Icon Settings -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192x192.png">
     <meta name="theme-color" content="#0f172a"/>
-    
-    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 動的な背景 -->
     <div class="background-orb" id="orb1"></div>
     <div class="background-orb" id="orb2"></div>
-
-    <!-- ===== アプリケーションコンテナ ===== -->
     <div id="app-container">
-
-        <!-- ===== 時間割ページ (初期表示) ===== -->
+        <!-- ===== 時間割ページ ===== -->
         <section id="timetable-page" class="page active">
             <header class="app-header">
                 <h1><i class="fas fa-th-large"></i> My Timetable</h1>
                 <div class="header-controls">
                     <label for="theme-switcher" class="theme-toggle">
                         <input type="checkbox" id="theme-switcher" role="switch">
-                        <span class="toggle-track">
-                            <i class="fas fa-sun"></i>
-                            <i class="fas fa-moon"></i>
-                        </span>
+                        <span class="toggle-track"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></span>
                     </label>
                     <button id="goto-memo-page-btn" class="header-btn"><i class="fas fa-pen-to-square"></i> メモ</button>
                 </div>
             </header>
             <main>
-                <div id="timetable-container" class="timetable-container">
-                    <!-- JavaScriptがここに時間割の全てのセルを生成します -->
-                </div>
+                <div id="timetable-container" class="timetable-container"></div>
             </main>
         </section>
-
-        <!-- ===== メモページ (最初は非表示) ===== -->
+        <!-- ===== メモページ ===== -->
         <section id="memo-page" class="page">
             <header class="app-header">
                 <button id="goto-timetable-page-btn" class="header-btn"><i class="fas fa-arrow-left"></i> 時間割に戻る</button>
@@ -107,7 +91,6 @@
             </main>
         </section>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>

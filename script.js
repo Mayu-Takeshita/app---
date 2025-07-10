@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const customSubjectText = document.getElementById('custom-subject-text');
     const memoImageInput = document.getElementById('memo-image');
     const imagePreviewContainer = document.getElementById('image-preview-container');
-    const removeImageBtn = document.getElementById('remove-image-btn');
     const sortOrderSelect = document.getElementById('sort-order');
     const exportBtn = document.getElementById('export-btn');
     const importFile = document.getElementById('import-file');
