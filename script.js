@@ -236,24 +236,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     memoImageInput.addEventListener('change', (e) => {
-        const files = e.target.files; if (!files || files.length === 0) return;
-        const filePromises = Array.from(files).map(file => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve({ base64: e.target.result, name: file.name });
-                reader.onerror = err => reject(err);
-                reader.readAsDataURL(file);
-            });
-        });
-        Promise.all(filePromises).then(results => { currentImages = results; renderImagePreviews(); })
-            .catch(err => { alert("画像の読み込みに失敗しました。"); });
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            currentImages.push({ base64: event.target.result, name: file.name });
+            renderImagePreviews();
+        };
+        reader.onerror = () => { alert("画像の読み込みに失敗しました。"); };
+        reader.readAsDataURL(file);
+        e.target.value = '';
     });
     imagePreviewContainer.addEventListener('click', e => {
         if (e.target.classList.contains('remove-preview-btn')) {
             const indexToRemove = parseInt(e.target.dataset.index, 10);
-            currentImages.splice(indexToRemove, 1);
-            renderImagePreviews();
-            memoImageInput.value = '';
+            if (!isNaN(indexToRemove)) {
+                currentImages.splice(indexToRemove, 1);
+                renderImagePreviews();
+            }
         }
     });
     searchBox.addEventListener('input', renderMemos);
