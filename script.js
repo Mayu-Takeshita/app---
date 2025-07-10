@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderTimetable = () => {
         timetableGrid.innerHTML = '';
         const timeHeaderContainer = document.querySelector('.timetable-container');
-        // 時限ヘッダーがなければ生成
         if (!timeHeaderContainer.querySelector('.time-slot')) {
             const timeSlots = Array.from({length: periodCount}, (_, i) => `<div class="day-header time-slot">${i + 1}</div>`).join('');
             const firstDayHeader = timeHeaderContainer.querySelector('.day-header');
@@ -213,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const listItem = target.closest('li');
         if (!listItem) return;
         const memoId = Number(listItem.dataset.id);
+
         if (target.classList.contains('delete-btn')) {
             if (confirm('このメモを本当に削除しますか？')) {
                 saveMemos(loadMemos().filter(m => m.id !== memoId));
