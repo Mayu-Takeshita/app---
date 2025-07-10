@@ -41,20 +41,77 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportBtn = document.getElementById('export-btn');
     const importFile = document.getElementById('import-file');
     const showAllBtn = document.getElementById('show-all-btn');
-    let currentImages = []; // { name, base64 } の配列
+    let currentImages = [];
 
     // --- 関数定義 ---
-    const switchPage = (pageToShow) => { /* ... */ };
-    const applyTheme = (isDark) => { /* ... */ };
+    const switchPage = (pageToShow) => {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        pageToShow.classList.add('active');
+    };
+    const applyTheme = (isDark) => {
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    };
     const loadMemos = () => JSON.parse(localStorage.getItem('memos') || '[]');
     const saveMemos = (memos) => localStorage.setItem('memos', JSON.stringify(memos));
-    const renderTimetable = () => { /* ... */ };
-    const populateSubjectDropdown = () => { /* ... */ };
+
+    const renderTimetable = () => {
+        timetableContainer.innerHTML = '';
+        timetableContainer.appendChild(document.createElement('div'));
+        dayOrder.forEach(day => {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'day-header'; dayCell.textContent = day;
+            timetableContainer.appendChild(dayCell);
+        });
+        for (let period = 1; period <= periodCount; period++) {
+            const timeCell = document.createElement('div');
+            timeCell.className = 'time-slot'; timeCell.textContent = period;
+            timetableContainer.appendChild(timeCell);
+            dayOrder.forEach(day => {
+                const subject = timetableData[day]?.[period] || null;
+                const subjectCell = document.createElement('div');
+                subjectCell.className = 'class-cell';
+                if (subject) {
+                    subjectCell.textContent = subject;
+                    subjectCell.dataset.subject = subject;
+                    subjectCell.classList.add('filled');
+                } else {
+                    subjectCell.classList.add('empty');
+                }
+                timetableContainer.appendChild(subjectCell);
+            });
+        }
+    };
+    
+    const populateSubjectDropdown = () => {
+        subjectSelect.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.value = ""; defaultOption.textContent = "科目を選択してください";
+        defaultOption.disabled = true; defaultOption.selected = true;
+        subjectSelect.appendChild(defaultOption);
+        dayOrderForSelect.forEach(day => {
+            const subjects = subjectsByDay[day];
+            if (subjects && subjects.length > 0) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = `--- ${day} ---`;
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject === "（手動で入力する）" ? "__other__" : subject;
+                    option.textContent = subject;
+                    optgroup.appendChild(option);
+                });
+                subjectSelect.appendChild(optgroup);
+            }
+        });
+    };
 
     const renderMemos = () => {
         const memos = loadMemos();
         const searchTerm = searchBox.value.toLowerCase();
-        let filteredMemos = searchTerm ? memos.filter(memo => memo.subject.toLowerCase().includes(searchTerm) || memo.memo.toLowerCase().includes(searchTerm)) : memos;
+        let filteredMemos = memos;
+        if (searchTerm) {
+            filteredMemos = memos.filter(memo => memo.subject.toLowerCase().includes(searchTerm) || memo.memo.toLowerCase().includes(searchTerm));
+        }
         const sortOrder = sortOrderSelect.value;
         if (sortOrder === 'date-asc') { filteredMemos.sort((a, b) => a.id - b.id); } 
         else if (sortOrder === 'date-desc') { filteredMemos.sort((a, b) => b.id - a.id); } 
@@ -102,49 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentImages = [];
     };
 
-    // --- イベントリスナー ---
-    memoForm.addEventListener('submit', e => {
-        e.preventDefault();
-        let subject = subjectSelect.value;
-        if (subject === '__other__') { subject = customSubjectText.value.trim(); }
-        const memo = memoText.value.trim();
-        if (!subject || !memo) { alert('科目とメモの両方を入力してください。'); return; }
-        const memos = loadMemos();
-        const now = new Date();
-        memos.push({ id: Date.now(), subject, memo, images: currentImages.map(img => img.base64), date: `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` });
-        saveMemos(memos);
-        renderMemos();
-        memoForm.reset();
-        subjectSelect.value = "";
-        customSubjectWrapper.classList.add('hidden');
-        customSubjectText.required = false;
-        resetImageInput();
-    });
-
-    memoImageInput.addEventListener('change', (e) => {
-        const files = e.target.files;
-        if (!files || files.length === 0) return;
-        
-        resetImageInput();
-        imagePreviewContainer.classList.remove('hidden');
-
-        const filePromises = Array.from(files).map(file => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve({ base64: e.target.result, name: file.name });
-                reader.onerror = err => reject(err);
-                reader.readAsDataURL(file);
-            });
-        });
-
-        Promise.all(filePromises).then(results => {
-            currentImages = results;
-            renderImagePreviews();
-        }).catch(err => {
-            alert("画像の読み込みに失敗しました。");
-        });
-    });
-
     const renderImagePreviews = () => {
         imagePreviewContainer.innerHTML = '';
         currentImages.forEach((image, index) => {
@@ -154,23 +168,123 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePreviewContainer.appendChild(previewItem);
         });
     };
-    
+
+    // --- イベントリスナー ---
+    themeSwitcher.addEventListener('change', e => applyTheme(e.target.checked));
+    gotoMemoPageBtn.addEventListener('click', () => { searchBox.value = ''; renderMemos(); switchPage(memoPage); });
+    gotoTimetablePageBtn.addEventListener('click', () => switchPage(timetablePage));
+    timetableContainer.addEventListener('click', e => {
+        if (e.target.classList.contains('filled')) {
+            const subject = e.target.dataset.subject;
+            switchPage(memoPage);
+            setTimeout(() => {
+                subjectSelect.value = subject;
+                customSubjectWrapper.classList.add('hidden');
+                customSubjectText.required = false;
+                searchBox.value = subject;
+                renderMemos();
+                window.scrollTo(0, 0);
+            }, 50);
+        }
+    });
+    showAllBtn.addEventListener('click', () => {
+        searchBox.value = '';
+        renderMemos();
+    });
+    memoForm.addEventListener('submit', e => {
+        e.preventDefault();
+        let subject = subjectSelect.value;
+        if (subject === '__other__') { subject = customSubjectText.value.trim(); }
+        const memo = memoText.value.trim();
+        if (!subject || !memo) { alert('科目とメモの両方を入力してください。'); return; }
+        const memos = loadMemos();
+        const now = new Date();
+        memos.push({ id: Date.now(), subject, memo, images: currentImages.map(img => img.base64), date: `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` });
+        saveMemos(memos); renderMemos(); memoForm.reset(); subjectSelect.value = "";
+        customSubjectWrapper.classList.add('hidden'); customSubjectText.required = false; resetImageInput();
+    });
+    subjectSelect.addEventListener('change', e => {
+        const isOther = e.target.value === '__other__';
+        customSubjectWrapper.classList.toggle('hidden', !isOther);
+        customSubjectText.required = isOther;
+        if (isOther) customSubjectText.focus();
+    });
+    memoListContainer.addEventListener('click', e => {
+        const target = e.target;
+        const listItem = target.closest('li');
+        if (!listItem) return;
+        const memoId = Number(listItem.dataset.id);
+        if (target.classList.contains('delete-btn')) {
+            if (confirm('このメモを本当に削除しますか？')) { saveMemos(loadMemos().filter(m => m.id !== memoId)); renderMemos(); }
+        } else if (target.classList.contains('edit-btn')) {
+            const memo = loadMemos().find(m => m.id === memoId);
+            listItem.querySelector('.memo-body').innerHTML = `<textarea class="edit-area">${memo.memo}</textarea>`;
+            target.textContent = '保存'; target.classList.replace('edit-btn', 'save-btn');
+        } else if (target.classList.contains('save-btn')) {
+            const newMemoText = listItem.querySelector('.edit-area').value;
+            let memos = loadMemos();
+            const memoIndex = memos.findIndex(m => m.id === memoId);
+            if (memoIndex > -1) { memos[memoIndex].memo = newMemoText; saveMemos(memos); }
+            renderMemos();
+        } else if (target.classList.contains('memo-image')) {
+            const newWindow = window.open();
+            newWindow.document.write(`<body style="margin:0; background:#111;"><img src="${target.src}" style="width:100%;"></body>`);
+        }
+    });
+    memoImageInput.addEventListener('change', (e) => {
+        const files = e.target.files; if (!files || files.length === 0) return;
+        resetImageInput();
+        imagePreviewContainer.classList.remove('hidden');
+        const filePromises = Array.from(files).map(file => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve({ base64: e.target.result, name: file.name });
+                reader.onerror = err => reject(err);
+                reader.readAsDataURL(file);
+            });
+        });
+        Promise.all(filePromises).then(results => { currentImages = results; renderImagePreviews(); })
+            .catch(err => { alert("画像の読み込みに失敗しました。"); });
+    });
     imagePreviewContainer.addEventListener('click', e => {
         if (e.target.classList.contains('remove-preview-btn')) {
             const indexToRemove = parseInt(e.target.dataset.index, 10);
             currentImages.splice(indexToRemove, 1);
             renderImagePreviews();
-            // ファイル選択自体はリセットできないため、この操作後の再登録は注意が必要
         }
     });
-
-    // (残りのイベントリスナーは、前回の回答と全く同じ)
-    // ...
+    removeImageBtn.addEventListener('click', resetImageInput);
+    searchBox.addEventListener('input', renderMemos);
+    sortOrderSelect.addEventListener('change', renderMemos);
+    exportBtn.addEventListener('click', () => {
+        const memos = loadMemos(); if (memos.length === 0) { alert('エクスポートするデータがありません。'); return; }
+        const dataStr = JSON.stringify(memos, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `memo-app-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click(); URL.revokeObjectURL(url);
+    });
+    importFile.addEventListener('change', e => {
+        const file = e.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const importedMemos = JSON.parse(e.target.result);
+                if (Array.isArray(importedMemos) && confirm(`${importedMemos.length}件のデータを追加しますか？`)) {
+                    const currentMemos = loadMemos();
+                    const newMemos = importedMemos.filter(m => !currentMemos.some(em => em.id === m.id));
+                    saveMemos([...currentMemos, ...newMemos]); renderMemos(); alert(`${newMemos.length}件の新しいメモをインポートしました。`);
+                } else { alert('無効なファイル形式です。'); }
+            } catch { alert('ファイルの読み込みに失敗しました。'); }
+        };
+        reader.readAsText(file); e.target.value = '';
+    });
 
     // --- 初期化処理 ---
-    const init = () => {
-        // (前回の回答と全く同じ)
-        // ...
-    };
-    init();
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) { const isDark = savedTheme === 'dark'; themeSwitcher.checked = isDark; applyTheme(isDark); } 
+    else { const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; themeSwitcher.checked = prefersDark; applyTheme(prefersDark); }
+    renderTimetable();
+    populateSubjectDropdown();
+    renderMemos();
 });
