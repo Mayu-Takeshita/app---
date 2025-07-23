@@ -68,6 +68,8 @@ IntelliNoteは、学生生活をサポートするための豊富な機能を備
   - `GitHub Pages`
 
 ---
+## YouTubeリンク
+https://youtu.be/s3CgXTD4_pA?si=TWGTPlQ8N8gBMq4J
 
 ## 使い方 (Usage)
 
